@@ -40,4 +40,11 @@ public class CategoryDTO implements Serializable {
 		this.name = name;
 	}
 
+	public static Category toEntity(CategoryDTO dto) {
+		Category entity = new Category();
+		entity.setName(dto.name);
+
+		return entity;
+	}
+
 }
