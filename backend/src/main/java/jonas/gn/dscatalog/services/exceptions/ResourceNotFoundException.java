@@ -1,16 +1,16 @@
 package jonas.gn.dscatalog.services.exceptions;
 
-public class EntityNotFoundException extends RuntimeException {
+public class ResourceNotFoundException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
 	private static final String defaultMsg = "Could not find this resource";
 
-	public EntityNotFoundException() {
+	public ResourceNotFoundException() {
 		this(defaultMsg);
 	}
 
-	public EntityNotFoundException(String msg) {
+	public ResourceNotFoundException(String msg) {
 		super(msg);
 	}
 
