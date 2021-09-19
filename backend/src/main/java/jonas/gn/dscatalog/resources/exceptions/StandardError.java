@@ -6,6 +6,7 @@ import java.time.Instant;
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 public class StandardError implements Serializable {
 
@@ -16,9 +17,6 @@ public class StandardError implements Serializable {
 	private String error;
 	private String message;
 	private String path;
-
-	public StandardError() {
-	}
 
 	public StandardError(HttpStatus status, String error, RuntimeException exception, HttpServletRequest request) {
 		this.timestamp = Instant.now();
@@ -32,16 +30,8 @@ public class StandardError implements Serializable {
 		return timestamp;
 	}
 
-	public void setTimestamp(Instant timestamp) {
-		this.timestamp = timestamp;
-	}
-
 	public int getStatus() {
 		return status;
-	}
-
-	public void setStatus(int status) {
-		this.status = status;
 	}
 
 	public String getError() {
@@ -64,8 +54,8 @@ public class StandardError implements Serializable {
 		return path;
 	}
 
-	public void setPath(String path) {
-		this.path = path;
+	public ResponseEntity<StandardError> toHttpResponse() {
+		return ResponseEntity.status(HttpStatus.valueOf(this.status)).body(this);
 	}
 
 }
