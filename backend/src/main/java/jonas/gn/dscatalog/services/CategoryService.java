@@ -53,6 +53,7 @@ public class CategoryService {
 			Category entity = repository.getById(id);
 			entity.setName(category.getName());
 			entity = repository.save(entity);
+			
 			return new CategoryDTO(entity);
 		} catch (EntityNotFoundException e) {
 			throw new ResourceNotFoundException("ID not found: " + id);

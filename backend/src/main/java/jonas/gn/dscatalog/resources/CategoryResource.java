@@ -44,6 +44,7 @@ public class CategoryResource {
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<CategoryDTO> fetchById(@PathVariable Long id) {
 		CategoryDTO result = service.fetchById(id);
+		
 		return ResponseEntity.ok(result);
 	}
 
@@ -60,12 +61,14 @@ public class CategoryResource {
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO category) {
 		CategoryDTO result = service.update(id, category);
+		
 		return ResponseEntity.ok(result);
 	}
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		service.delete(id);
+		
 		return ResponseEntity.noContent().build();
 	}
 
