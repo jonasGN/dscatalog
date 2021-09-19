@@ -1,15 +1,14 @@
 package jonas.gn.dscatalog.services;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import javax.persistence.EntityNotFoundException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,11 +25,10 @@ public class CategoryService {
 	private CategoryRepository repository;
 
 	@Transactional(readOnly = true)
-	public List<CategoryDTO> fetchAll() {
-		List<Category> result = repository.findAll();
-		Stream<CategoryDTO> categories = result.stream().map(c -> new CategoryDTO(c));
+	public Page<CategoryDTO> fetchAllPaged(PageRequest pageRequest) {
+		Page<Category> result = repository.findAll(pageRequest);
 
-		return categories.collect(Collectors.toList());
+		return result.map(c -> new CategoryDTO(c));
 	}
 
 	@Transactional(readOnly = true)

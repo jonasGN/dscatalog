@@ -1,9 +1,11 @@
 package jonas.gn.dscatalog.resources;
 
 import java.net.URI;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,8 +30,14 @@ public class CategoryResource {
 	private CategoryService service;
 
 	@GetMapping
-	public ResponseEntity<List<CategoryDTO>> fetchAll() {
-		List<CategoryDTO> result = service.fetchAll();
+	public ResponseEntity<Page<CategoryDTO>> fetchAll(@RequestParam(defaultValue = "0") Integer page,
+			@RequestParam(defaultValue = "20") Integer linesPerPage,
+			@RequestParam(defaultValue = "ASC") String direction,
+			@RequestParam(defaultValue = "id") String orderBy) {
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+
+		Page<CategoryDTO> result = service.fetchAllPaged(pageRequest);
+
 		return ResponseEntity.ok(result);
 	}
 
