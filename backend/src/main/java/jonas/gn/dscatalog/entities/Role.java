@@ -2,16 +2,13 @@ package jonas.gn.dscatalog.entities;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
@@ -19,31 +16,28 @@ import javax.persistence.Table;
 import jonas.gn.dscatalog.entities.definitions.EntityDefinitions;
 
 @Entity
-@Table(name = "tb_category")
-public class Category implements Serializable {
+@Table(name = "tb_role")
+public class Role implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String name;
-
-	@ManyToMany(mappedBy = "categories")
-	private Set<Product> products = new HashSet<>();
+	private String authority;
 
 	@Column(columnDefinition = EntityDefinitions.withoutTimeZone)
 	private Instant createdAt;
 
 	@Column(columnDefinition = EntityDefinitions.withoutTimeZone)
-	private Instant updateAt;
+	private Instant updatedAt;
 
-	public Category() {
+	public Role() {
 	}
 
-	public Category(Long id, String name) {
+	public Role(Long id, String authority) {
 		this.id = id;
-		this.name = name;
+		this.authority = authority;
 	}
 
 	public Long getId() {
@@ -54,34 +48,30 @@ public class Category implements Serializable {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getAuthority() {
+		return authority;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public Set<Product> getProducts() {
-		return products;
+	public void setAuthority(String authority) {
+		this.authority = authority;
 	}
 
 	public Instant getCreatedAt() {
 		return createdAt;
 	}
 
-	public Instant getUpdateAt() {
-		return updateAt;
+	public Instant getUpdatedAt() {
+		return updatedAt;
 	}
 
 	@PrePersist
 	public void prePersist() {
-		createdAt = Instant.now();
+		this.createdAt = Instant.now();
 	}
 
 	@PreUpdate
 	public void preUpdate() {
-		updateAt = Instant.now();
+		this.updatedAt = Instant.now();
 	}
 
 	@Override
@@ -97,7 +87,7 @@ public class Category implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Category other = (Category) obj;
+		Role other = (Role) obj;
 		return Objects.equals(id, other.id);
 	}
 
