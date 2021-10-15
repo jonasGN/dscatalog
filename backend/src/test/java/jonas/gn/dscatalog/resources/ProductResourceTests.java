@@ -132,7 +132,7 @@ public class ProductResourceTests {
 	}
 
 	@Test
-	public void deleteShouldReturnNoContentWhenIdIsDependet() throws Exception {
+	public void deleteShouldReturnBadRequestWhenIdIsDependet() throws Exception {
 		ResultActions request = mockMvc.perform(delete(URI_PATH_WITH_ID, dependentId).accept(JSON_TYPE));
 
 		request.andExpect(status().isBadRequest());
