@@ -25,24 +25,24 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import jonas.gn.dscatalog.dto.ProductDTO;
+import jonas.gn.dscatalog.dto.CategoryDTO;
 import jonas.gn.dscatalog.factory.Factory;
-import jonas.gn.dscatalog.services.ProductService;
+import jonas.gn.dscatalog.services.CategoryService;
 import jonas.gn.dscatalog.services.exceptions.DatabaseException;
 import jonas.gn.dscatalog.services.exceptions.ResourceNotFoundException;
 
-@WebMvcTest(ProductResource.class)
-public class ProductResourceTests {
+@WebMvcTest(CategoryResource.class)
+public class CategoryResourceTests {
 
-	private static final String URI_PATH = "/products/";
+	private static final String URI_PATH = "/categories/";
 	private static final String URI_PATH_WITH_ID = URI_PATH + "{id}";
 	private static final MediaType JSON_TYPE = MediaType.APPLICATION_JSON;
 
 	@Autowired
-	private MockMvc mockMvc;
+	private MockMvc mock;
 
 	@MockBean
-	private ProductService service;
+	private CategoryService service;
 
 	@Autowired
 	private ObjectMapper objectMapper;
@@ -51,19 +51,19 @@ public class ProductResourceTests {
 	private long nonExistingId = 2L;
 	private long dependentId = 3L;
 
-	private ProductDTO productDTO = Factory.createProductDTO();
-	private PageImpl<ProductDTO> page = new PageImpl<>(List.of(productDTO));
+	private CategoryDTO categoryDTO = Factory.createCategoryDTO();
+	private PageImpl<CategoryDTO> page = new PageImpl<>(List.of(categoryDTO));
 
 	@BeforeEach
 	public void setUp() throws Exception {
 		when(service.fetchAllPaged(Mockito.any())).thenReturn(page);
 
-		when(service.fetchById(existingId)).thenReturn(productDTO);
+		when(service.fetchById(existingId)).thenReturn(categoryDTO);
 		when(service.fetchById(nonExistingId)).thenThrow(ResourceNotFoundException.class);
 
-		when(service.add(Mockito.any())).thenReturn(productDTO);
+		when(service.add(Mockito.any())).thenReturn(categoryDTO);
 
-		when(service.update(Mockito.eq(existingId), Mockito.any())).thenReturn(productDTO);
+		when(service.update(Mockito.eq(existingId), Mockito.any())).thenReturn(categoryDTO);
 		when(service.update(Mockito.eq(nonExistingId), Mockito.any())).thenThrow(ResourceNotFoundException.class);
 
 		doNothing().when(service).delete(existingId);
@@ -72,85 +72,80 @@ public class ProductResourceTests {
 	}
 
 	@Test
-	public void findAllPagedShouldReturnProductsPage() throws Exception {
-		final ResultActions request = mockMvc.perform(get(URI_PATH).accept(JSON_TYPE));
+	public void findAllPagedShouldReturnCategorysPage() throws Exception {
+		final ResultActions request = mock.perform(get(URI_PATH).accept(JSON_TYPE));
 
 		request.andExpect(status().isOk());
 	}
 
 	@Test
-	public void fetchByIdShouldReturnProductWhenIdExists() throws Exception {
-		final ResultActions request = mockMvc.perform(get(URI_PATH_WITH_ID, existingId).accept(JSON_TYPE));
+	public void fetchByIdShouldReturnCategoryWhenIdExists() throws Exception {
+		final ResultActions request = mock.perform(get(URI_PATH_WITH_ID, existingId).accept(JSON_TYPE));
 
 		request.andExpect(status().isOk());
-		checkProductJsonBody(request);
+		checkCategoryJsonBody(request);
 	}
 
 	@Test
 	public void fetchByIdShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-		final ResultActions request = mockMvc.perform(get(URI_PATH_WITH_ID, nonExistingId).accept(JSON_TYPE));
+		final ResultActions request = mock.perform(get(URI_PATH_WITH_ID, nonExistingId).accept(JSON_TYPE));
 
 		request.andExpect(status().isNotFound());
 	}
 
 	@Test
-	public void addShouldAddAndReturnNewProduct() throws Exception {
-		final String body = objectMapper.writeValueAsString(productDTO);
-		final ResultActions request = mockMvc
+	public void addShouldAddAndReturnNewCategory() throws Exception {
+		final String body = objectMapper.writeValueAsString(categoryDTO);
+		final ResultActions request = mock
 				.perform(post(URI_PATH).accept(JSON_TYPE).contentType(JSON_TYPE).content(body));
 
 		request.andExpect(status().isCreated());
-		checkProductJsonBody(request);
+		checkCategoryJsonBody(request);
 	}
 
 	@Test
-	public void updateShouldUpdateAnReturnProductWhenIdExists() throws Exception {
-		final String body = objectMapper.writeValueAsString(productDTO);
-		final ResultActions request = mockMvc
+	public void updateShouldUpdateAnReturnCategoryWhenIdExists() throws Exception {
+		final String body = objectMapper.writeValueAsString(categoryDTO);
+		final ResultActions request = mock
 				.perform(put(URI_PATH_WITH_ID, existingId).accept(JSON_TYPE).contentType(JSON_TYPE).content(body));
 
 		request.andExpect(status().isOk());
-		checkProductJsonBody(request);
+		checkCategoryJsonBody(request);
 	}
 
 	@Test
 	public void updateShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-		final String body = objectMapper.writeValueAsString(productDTO);
-		final ResultActions request = mockMvc
+		final String body = objectMapper.writeValueAsString(categoryDTO);
+		final ResultActions request = mock
 				.perform(put(URI_PATH_WITH_ID, nonExistingId).accept(JSON_TYPE).contentType(JSON_TYPE).content(body));
 
 		request.andExpect(status().isNotFound());
 	}
 
 	@Test
-	public void deleteShouldDeleteProductWhenIdExists() throws Exception {
-		final ResultActions request = mockMvc.perform(delete(URI_PATH_WITH_ID, existingId).accept(JSON_TYPE));
+	public void deleteShouldDeleteCategoryWhenIdExists() throws Exception {
+		final ResultActions request = mock.perform(delete(URI_PATH_WITH_ID, existingId).accept(JSON_TYPE));
 
 		request.andExpect(status().isNoContent());
 	}
 
 	@Test
 	public void deleteShouldReturnNotFoundWhenIdDoesNotExist() throws Exception {
-		final ResultActions request = mockMvc.perform(delete(URI_PATH_WITH_ID, nonExistingId).accept(JSON_TYPE));
+		final ResultActions request = mock.perform(delete(URI_PATH_WITH_ID, nonExistingId).accept(JSON_TYPE));
 
 		request.andExpect(status().isNotFound());
 	}
 
 	@Test
 	public void deleteShouldReturnBadRequestWhenIdIsDependet() throws Exception {
-		final ResultActions request = mockMvc.perform(delete(URI_PATH_WITH_ID, dependentId).accept(JSON_TYPE));
+		final ResultActions request = mock.perform(delete(URI_PATH_WITH_ID, dependentId).accept(JSON_TYPE));
 
 		request.andExpect(status().isBadRequest());
 	}
 
-	private void checkProductJsonBody(ResultActions request) throws Exception {
+	private void checkCategoryJsonBody(ResultActions request) throws Exception {
 		request.andExpect(jsonPath("$.id").exists());
 		request.andExpect(jsonPath("$.name").exists());
-		request.andExpect(jsonPath("$.description").exists());
-		request.andExpect(jsonPath("$.price").exists());
-		request.andExpect(jsonPath("$.imgUrl").exists());
-		// request.andExpect(jsonPath("$.moment").exists());
-		request.andExpect(jsonPath("$.categories").exists());
 	}
 
 }

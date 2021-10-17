@@ -2,6 +2,8 @@ package jonas.gn.dscatalog.dto;
 
 import java.io.Serializable;
 
+import javax.validation.constraints.NotBlank;
+
 import jonas.gn.dscatalog.entities.Role;
 
 public class RoleDTO implements Serializable {
@@ -9,6 +11,7 @@ public class RoleDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	@NotBlank
 	private String authority;
 
 	public RoleDTO() {

@@ -4,6 +4,10 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 import jonas.gn.dscatalog.entities.User;
 
 public class UserDTO implements Serializable {
@@ -11,8 +15,13 @@ public class UserDTO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private Long id;
+	@NotBlank
+	@Size(max = 20)
 	private String firstName;
+	@NotBlank
+	@Size(max = 20)
 	private String lastName;
+	@Email
 	private String email;
 	private Set<RoleDTO> roles = new HashSet<>();
 

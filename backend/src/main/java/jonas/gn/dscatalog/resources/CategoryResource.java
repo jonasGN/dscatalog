@@ -2,6 +2,8 @@ package jonas.gn.dscatalog.resources;
 
 import java.net.URI;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,7 +44,7 @@ public class CategoryResource {
 	}
 
 	@PostMapping
-	public ResponseEntity<CategoryDTO> add(@RequestBody CategoryDTO category) {
+	public ResponseEntity<CategoryDTO> add(@Valid @RequestBody CategoryDTO category) {
 		category = service.add(category);
 
 		UriComponentsBuilder uriBuilder = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}");
@@ -52,7 +54,7 @@ public class CategoryResource {
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @RequestBody CategoryDTO category) {
+	public ResponseEntity<CategoryDTO> update(@PathVariable Long id, @Valid @RequestBody CategoryDTO category) {
 		CategoryDTO result = service.update(id, category);
 
 		return ResponseEntity.ok(result);
