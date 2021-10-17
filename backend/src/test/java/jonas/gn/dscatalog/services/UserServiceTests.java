@@ -27,6 +27,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import jonas.gn.dscatalog.dto.UserDTO;
@@ -51,6 +52,9 @@ public class UserServiceTests {
 
 	@Mock
 	private RoleRepository roleRepository;
+
+	@Mock
+	private BCryptPasswordEncoder passwordEncoder;
 
 	private long existingId = 1L;
 	private long nonExistingId = 2L;
@@ -81,6 +85,8 @@ public class UserServiceTests {
 
 		when(roleRepository.getById(existingId)).thenReturn(role);
 		when(roleRepository.getById(nonExistingId)).thenThrow(EntityNotFoundException.class);
+
+		when(passwordEncoder.encode(user.getPassword())).thenReturn(any(String.class));
 	}
 
 	@Test
