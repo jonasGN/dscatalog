@@ -1,7 +1,9 @@
 package jonas.gn.dscatalog.dto;
 
 import jonas.gn.dscatalog.entities.User;
+import jonas.gn.dscatalog.services.validation.UserInsertValid;
 
+@UserInsertValid
 public class UserInsertDTO extends UserDTO {
 
 	private static final long serialVersionUID = 1L;

@@ -4,6 +4,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -21,8 +23,20 @@ public class ResourceExceptionHandler {
 	}
 
 	@ExceptionHandler(DatabaseException.class)
-	public ResponseEntity<StandardError> databaseError(DatabaseException e, HttpServletRequest request) {
+	public ResponseEntity<StandardError> databaseViolation(DatabaseException e, HttpServletRequest request) {
 		final StandardError error = new StandardError(HttpStatus.BAD_REQUEST, e, request);
+
+		return error.toJsonResponse();
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<StandardError> validation(MethodArgumentNotValidException e, HttpServletRequest request) {
+		final String message = e.getMessage();
+		final ValidationError error = new ValidationError(HttpStatus.UNPROCESSABLE_ENTITY, message, request);
+
+		for (FieldError f : e.getFieldErrors()) {
+			error.addError(f.getField(), f.getDefaultMessage());
+		}
 
 		return error.toJsonResponse();
 	}
