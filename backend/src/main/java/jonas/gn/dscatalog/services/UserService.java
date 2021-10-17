@@ -45,7 +45,7 @@ public class UserService {
 	@Transactional(readOnly = true)
 	public UserDTO fetchById(Long id) {
 		final Optional<User> result = repository.findById(id);
-		final User entity = result.orElseThrow(() -> new ResourceNotFoundException());
+		final User entity = result.orElseThrow(() -> new ResourceNotFoundException(id));
 
 		return new UserDTO(entity);
 	}
@@ -69,7 +69,7 @@ public class UserService {
 
 			return new UserDTO(entity);
 		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException();
+			throw new ResourceNotFoundException(id);
 		}
 	}
 
@@ -77,7 +77,7 @@ public class UserService {
 		try {
 			repository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException();
+			throw new ResourceNotFoundException(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException();
 		}

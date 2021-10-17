@@ -18,11 +18,11 @@ public class StandardError implements Serializable {
 	private String message;
 	private String path;
 
-	public StandardError(HttpStatus status, String error, RuntimeException exception, HttpServletRequest request) {
+	public StandardError(HttpStatus status, RuntimeException error, HttpServletRequest request) {
 		this.timestamp = Instant.now();
 		this.status = status.value();
-		this.error = error;
-		this.message = exception.getMessage();
+		this.error = status.getReasonPhrase();
+		this.message = error.getMessage();
 		this.path = request.getRequestURI();
 	}
 
@@ -54,7 +54,7 @@ public class StandardError implements Serializable {
 		return path;
 	}
 
-	public ResponseEntity<StandardError> toHttpResponse() {
+	public ResponseEntity<StandardError> toJsonResponse() {
 		return ResponseEntity.status(HttpStatus.valueOf(this.status)).body(this);
 	}
 

@@ -7,11 +7,15 @@ public class ResourceNotFoundException extends RuntimeException {
 	private static final String defaultMsg = "Could not find this resource";
 
 	public ResourceNotFoundException() {
-		this(defaultMsg);
+		super(defaultMsg);
 	}
 
 	public ResourceNotFoundException(String msg) {
 		super(msg);
+	}
+
+	public ResourceNotFoundException(Long resourceId) {
+		super(defaultMsg + ", by the given ID: " + resourceId);
 	}
 
 }

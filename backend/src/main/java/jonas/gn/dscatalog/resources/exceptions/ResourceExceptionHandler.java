@@ -15,18 +15,16 @@ public class ResourceExceptionHandler {
 
 	@ExceptionHandler(ResourceNotFoundException.class)
 	public ResponseEntity<StandardError> entityNotFound(ResourceNotFoundException e, HttpServletRequest request) {
-		String errorMessage = "Resource not found";
-		StandardError error = new StandardError(HttpStatus.NOT_FOUND, errorMessage, e, request);
+		final StandardError error = new StandardError(HttpStatus.NOT_FOUND, e, request);
 
-		return error.toHttpResponse();
+		return error.toJsonResponse();
 	}
 
 	@ExceptionHandler(DatabaseException.class)
 	public ResponseEntity<StandardError> databaseError(DatabaseException e, HttpServletRequest request) {
-		String errorMessage = "Bad request";
-		StandardError error = new StandardError(HttpStatus.BAD_REQUEST, errorMessage, e, request);
+		final StandardError error = new StandardError(HttpStatus.BAD_REQUEST, e, request);
 
-		return error.toHttpResponse();
+		return error.toJsonResponse();
 	}
 
 }

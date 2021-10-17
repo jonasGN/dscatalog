@@ -40,7 +40,7 @@ public class ProductService {
 	@Transactional(readOnly = true)
 	public ProductDTO fetchById(Long id) {
 		Optional<Product> result = repository.findById(id);
-		Product entity = result.orElseThrow(() -> new ResourceNotFoundException());
+		Product entity = result.orElseThrow(() -> new ResourceNotFoundException(id));
 
 		return new ProductDTO(entity, entity.getCategories());
 	}
@@ -63,7 +63,7 @@ public class ProductService {
 
 			return new ProductDTO(entity);
 		} catch (EntityNotFoundException e) {
-			throw new ResourceNotFoundException();
+			throw new ResourceNotFoundException(id);
 		}
 	}
 
@@ -71,7 +71,7 @@ public class ProductService {
 		try {
 			repository.deleteById(id);
 		} catch (EmptyResultDataAccessException e) {
-			throw new ResourceNotFoundException("ID not found: " + id);
+			throw new ResourceNotFoundException(id);
 		} catch (DataIntegrityViolationException e) {
 			throw new DatabaseException();
 		}
