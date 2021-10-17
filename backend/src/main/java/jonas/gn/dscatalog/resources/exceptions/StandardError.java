@@ -18,19 +18,11 @@ public class StandardError implements Serializable {
 	private String message;
 	private String path;
 
-	public StandardError(HttpStatus status, RuntimeException error, HttpServletRequest request) {
+	public StandardError(HttpStatus status, Exception error, HttpServletRequest request) {
 		timestamp = Instant.now();
 		this.status = status.value();
 		this.error = status.getReasonPhrase();
 		message = error.getMessage();
-		path = request.getRequestURI();
-	}
-
-	public StandardError(HttpStatus status, String errorMessage, HttpServletRequest request) {
-		timestamp = Instant.now();
-		this.status = status.value();
-		error = status.getReasonPhrase();
-		message = errorMessage;
 		path = request.getRequestURI();
 	}
 
