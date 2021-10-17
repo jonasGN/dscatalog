@@ -15,6 +15,10 @@ public class ValidationError extends StandardError {
 
 	private List<FieldMessage> errors = new ArrayList<>();
 
+	public ValidationError() {
+		super();
+	}
+
 	public ValidationError(HttpStatus status, Exception error, HttpServletRequest request) {
 		super(status, error, request);
 	}

@@ -18,6 +18,9 @@ public class StandardError implements Serializable {
 	private String message;
 	private String path;
 
+	public StandardError() {
+	}
+
 	public StandardError(HttpStatus status, Exception error, HttpServletRequest request) {
 		timestamp = Instant.now();
 		this.status = status.value();

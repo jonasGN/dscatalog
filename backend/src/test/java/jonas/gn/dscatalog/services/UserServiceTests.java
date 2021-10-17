@@ -31,6 +31,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import jonas.gn.dscatalog.dto.UserDTO;
 import jonas.gn.dscatalog.dto.UserInsertDTO;
+import jonas.gn.dscatalog.dto.UserUpdateDTO;
 import jonas.gn.dscatalog.entities.Role;
 import jonas.gn.dscatalog.entities.User;
 import jonas.gn.dscatalog.factory.Factory;
@@ -57,6 +58,7 @@ public class UserServiceTests {
 
 	private User user = Factory.createUser();
 	private UserDTO dto = Factory.createUserDTO();
+	private UserUpdateDTO updateDto = new UserUpdateDTO(user);
 	private Page<User> page = new PageImpl<>(List.of(user));
 
 	private Role role = Factory.createRole();
@@ -123,7 +125,7 @@ public class UserServiceTests {
 
 	@Test
 	public void updateShouldUpdateWhenIdExists() {
-		final UserDTO result = service.update(existingId, dto);
+		final UserDTO result = service.update(existingId, updateDto);
 
 		assertNotNull(result);
 		assertEquals(existingId, result.getId());
@@ -134,7 +136,7 @@ public class UserServiceTests {
 	@Test
 	public void updateShouldThrowResourceNotFoundExceptionWhenIdDoesNotExist() {
 		assertThrows(ResourceNotFoundException.class, () -> {
-			service.update(nonExistingId, dto);
+			service.update(nonExistingId, updateDto);
 		});
 		verify(repository).getById(nonExistingId);
 		verify(repository, never()).save(any());

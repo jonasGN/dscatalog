@@ -21,6 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import jonas.gn.dscatalog.dto.UserDTO;
 import jonas.gn.dscatalog.dto.UserInsertDTO;
+import jonas.gn.dscatalog.dto.UserUpdateDTO;
 import jonas.gn.dscatalog.services.UserService;
 
 @RestController
@@ -55,7 +56,7 @@ public class UserResource {
 	}
 
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserDTO user) {
+	public ResponseEntity<UserDTO> update(@PathVariable Long id, @Valid @RequestBody UserUpdateDTO user) {
 		final UserDTO result = service.update(id, user);
 
 		return ResponseEntity.ok(result);
